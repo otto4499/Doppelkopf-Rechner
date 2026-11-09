@@ -136,7 +136,7 @@ function viewSetup() {
     </div>
     ${n < MAX_PLAYERS ? '<button class="btn ghost" data-action="add-name">+ Spieler hinzufügen</button>' : ''}
     <p class="hint">Reihenfolge = Sitzordnung. Bei mehr als 4 Spielern setzen pro Runde die übrigen aus.</p>
-    <div class="stack"><button class="btn primary" data-action="start" arial-label="Abend starten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fefefe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play preview-icon"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></button></div>`;
+    <div class="stack"><button class="btn primary" data-action="start" aria-label="Spiel starten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fefefe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play preview-icon"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></button></div>`;
 }
 
 function viewEvening() {
@@ -166,7 +166,7 @@ function viewEvening() {
         <button class="btn" data-action="open-cards" aria-label="Kartenübersicht">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.832 8.445a1 1 0 00-1.589-.098l-2.075 3.098a1 1 0 000 1.11l2 3a1 1 0 001.664 0l2-3a1 1 0 000-1.11z"/><path d="m7.18 20.827-5-11a2 2 0 01.993-2.647L7 5.44"/><rect x="7" y="2" width="14" height="20" rx="2"/></svg>
         </button>
-        <button class="btn" data-action="end-evening" aria-label="Abend beenden">
+        <button class="btn" data-action="end-evening" aria-label="Spiel beenden">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff3737" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-chevrons-right preview-icon"><path d="M14 15L17 12L14 9"/><path d="M8 15L11 12L8 9"/><circle cx="12" cy="12" r="10"/></svg>
           </svg>
@@ -185,9 +185,9 @@ function viewHistory() {
       ${totals.length ? totals.map((p, i) => `
         <div class="row">
           <span class="rank">${i + 1}</span>
-          <div class="grow"><div class="name">${esc(p.name)}</div><div class="sub">${p.evenings} ${p.evenings === 1 ? 'Abend' : 'Abende'}</div></div>
+          <div class="grow"><div class="name">${esc(p.name)}</div><div class="sub">${p.evenings} ${p.evenings === 1 ? 'Spiel' : 'Spiele'}</div></div>
           ${balanceHtml(p.pts)}
-        </div>`).join('') : '<div class="empty">Noch keine Spieleabende.</div>'}
+        </div>`).join('') : '<div class="empty">Noch keine Spiele.</div>'}
     </div>
     <h3>Spielverzeichnis</h3>
     <div class="card">
@@ -198,7 +198,7 @@ function viewHistory() {
             <div class="sub">${ev.rounds.length} Runden · ${ev.players.map((p) => esc(p.name)).join(', ')}</div>
           </div>
           <span class="chev">›</span>
-        </button>`).join('') : '<div class="empty">Hier erscheinen deine Spieleabende.</div>'}
+        </button>`).join('') : '<div class="empty">Hier erscheinen deine Spiele.</div>'}
     </div>`;
 }
 
@@ -217,7 +217,7 @@ function viewSettings() {
 
     <h3>Datensicherung</h3>
     <div class="card">
-      <button class="row" data-action="export"><div class="grow"><div class="name">Backup exportieren</div><div class="sub">Alle Abende als Datei sichern</div></div><span class="chev">›</span></button>
+      <button class="row" data-action="export"><div class="grow"><div class="name">Backup exportieren</div><div class="sub">Alle Spiele als Datei sichern</div></div><span class="chev">›</span></button>
       <label class="row" style="cursor:pointer"><div class="grow"><div class="name">Backup importieren</div><div class="sub">Ersetzt die aktuellen Daten</div></div><span class="chev">›</span>
         <input type="file" id="import" accept="application/json,.json" hidden></label>
     </div>
@@ -351,8 +351,8 @@ function sheetEvening(ev) {
     <h3>Runden</h3>
     <div class="card">${roundsList(ev)}</div>
     <div class="stack">
-      ${isActive ? '' : `<button class="btn primary" data-action="resume" data-id="${ev.id}">Abend fortsetzen</button>`}
-      <button class="btn danger" data-action="delete-evening" data-id="${ev.id}">Abend löschen</button>
+      ${isActive ? '' : `<button class="btn primary" data-action="resume" data-id="${ev.id}">Spiel fortsetzen</button>`}
+      <button class="btn danger" data-action="delete-evening" data-id="${ev.id}">Spiel löschen</button>
     </div>`;
 }
 
@@ -531,7 +531,7 @@ const actions = {
   'open-cards'() { openSheet({ type: 'cards' }); },
   'end-evening'() {
     const ev = activeEvening();
-    if (!confirm('Abend beenden? Er bleibt im Verlauf gespeichert.')) return;
+    if (!confirm('Spiel beenden? Es bleibt im Verlauf gespeichert.')) return;
     if (!ev.rounds.length) db.evenings = db.evenings.filter((e) => e.id !== ev.id);
     db.activeId = null;
     save();
@@ -555,7 +555,7 @@ const actions = {
     window.scrollTo(0, 0);
   },
   'delete-evening'(el) {
-    if (!confirm('Diesen Abend endgültig löschen?')) return;
+    if (!confirm('Dieses Spiel endgültig löschen?')) return;
     db.evenings = db.evenings.filter((e) => e.id !== el.dataset.id);
     if (db.activeId === el.dataset.id) db.activeId = null;
     save();
@@ -605,7 +605,7 @@ const actions = {
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   },
   reset() {
-    if (!confirm('Wirklich ALLE Spieleabende und Einstellungen löschen?')) return;
+    if (!confirm('Wirklich ALLE Spiele und Einstellungen löschen?')) return;
     db = emptyDb();
     ui.setupNames = null;
     save();

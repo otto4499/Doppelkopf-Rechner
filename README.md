@@ -9,7 +9,7 @@ Punktezähler für Doppelkopf als Web-App fürs iPhone.
 - **Solo-Faktor** ×2 bis ×5: 1 Gewinner (Solist gewinnt) oder 3 Gewinner (Solist verliert); der Solist bekommt/zahlt den 3-fachen Wert
 - Kontostand je Spieler (Summe immer 0) inkl. Umrechnung in Euro (Standard 1 Punkt = 10 Cent, in den Einstellungen änderbar)
 - Liste aller Runden, jede Runde nachträglich bearbeitbar oder löschbar
-- Verlauf aller Spieleabende mit Gesamtstand über alle Abende
+- Verlauf aller Spiele mit Gesamtstand über alle Spiele
 - Backup exportieren/importieren, funktioniert offline, heller und dunkler Modus
 
 ## Veröffentlichen mit GitHub Pages
