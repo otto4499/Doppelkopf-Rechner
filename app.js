@@ -124,7 +124,7 @@ function viewSetup() {
   }
   const n = ui.setupNames.length;
   return `
-    <div class="head"><div><div class="eyebrow">${esc(fmtDate(new Date().toISOString()))}</div><h1>Neuer Abend</h1></div></div>
+    <div class="head"><div><div class="eyebrow">${esc(fmtDate(new Date().toISOString()))}</div><h1>Neues Spiel</h1></div></div>
     <h3>Spieler (${MIN_PLAYERS}–${MAX_PLAYERS})</h3>
     <div class="card">
       ${ui.setupNames.map((name, i) => `
@@ -136,7 +136,7 @@ function viewSetup() {
     </div>
     ${n < MAX_PLAYERS ? '<button class="btn ghost" data-action="add-name">+ Spieler hinzufügen</button>' : ''}
     <p class="hint">Reihenfolge = Sitzordnung. Bei mehr als 4 Spielern setzen pro Runde die übrigen aus.</p>
-    <div class="stack"><button class="btn primary" data-action="start">Abend starten</button></div>`;
+    <div class="stack"><button class="btn primary" data-action="start" arial-label="Abend starten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fefefe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play preview-icon"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></button></div>`;
 }
 
 function viewEvening() {
@@ -144,7 +144,7 @@ function viewEvening() {
   const t = eveningTotals(ev);
   return `
     <div class="head">
-      <div><div class="eyebrow">${esc(fmtDate(ev.date))}</div><h1>Spieleabend</h1></div>
+      <div><div class="eyebrow">${esc(fmtDate(ev.date))}</div><h1>Spiel</h1></div>
       <button class="icon-btn" data-action="open-rounds" aria-label="Alle Runden">
         <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -161,10 +161,14 @@ function viewEvening() {
         </div>`).join('')}
     </div>
     <div class="stack">
-      <button class="btn primary" data-action="new-round">Runde eintragen</button>
+      <button class="btn primary" data-action="new-round" aria-label="Runde eintragen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fefefe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus preview-icon"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
       <div class="btn-row">
         <button class="btn" data-action="open-rounds">Alle Runden</button>
-        <button class="btn" data-action="end-evening">Abend beenden</button>
+        <button class="btn" data-action="end-evening" aria-label="Abend beenden">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff3737" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-chevrons-right preview-icon"><path d="M14 15L17 12L14 9"/><path d="M8 15L11 12L8 9"/><circle cx="12" cy="12" r="10"/></svg>
+          </svg>
+        </button>
       </div>
     </div>`;
 }
@@ -173,7 +177,7 @@ function viewHistory() {
   const totals = overallTotals();
   const evs = [...db.evenings].reverse();
   return `
-    <div class="head"><div><div class="eyebrow">Alle Spieleabende</div><h1>Verlauf</h1></div></div>
+    <div class="head"><div><div class="eyebrow">Alle Spiele</div><h1>Verlauf</h1></div></div>
     <h3>Gesamtstand</h3>
     <div class="card">
       ${totals.length ? totals.map((p, i) => `
@@ -183,7 +187,7 @@ function viewHistory() {
           ${balanceHtml(p.pts)}
         </div>`).join('') : '<div class="empty">Noch keine Spieleabende.</div>'}
     </div>
-    <h3>Spieleabende</h3>
+    <h3>Spielverzeichnis</h3>
     <div class="card">
       ${evs.length ? evs.map((ev) => `
         <button class="row" data-action="open-evening" data-id="${ev.id}">
