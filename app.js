@@ -163,6 +163,9 @@ function viewEvening() {
     <div class="stack">
       <button class="btn primary" data-action="new-round" aria-label="Runde eintragen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fefefe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus preview-icon"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
       <div class="btn-row">
+        <button class="btn" data-action="open-cards" aria-label="Kartenübersicht">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.832 8.445a1 1 0 00-1.589-.098l-2.075 3.098a1 1 0 000 1.11l2 3a1 1 0 001.664 0l2-3a1 1 0 000-1.11z"/><path d="m7.18 20.827-5-11a2 2 0 01.993-2.647L7 5.44"/><rect x="7" y="2" width="14" height="20" rx="2"/></svg>
+        </button>
         <button class="btn" data-action="open-rounds">Alle Runden</button>
         <button class="btn" data-action="end-evening" aria-label="Abend beenden">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -256,6 +259,7 @@ function renderSheet() {
   if (s.type === 'editor') el.innerHTML = sheetEditor();
   else if (s.type === 'rounds') el.innerHTML = sheetRounds(getEvening(s.evId));
   else if (s.type === 'evening') el.innerHTML = sheetEvening(getEvening(s.evId));
+  else if (s.type === 'cards') el.innerHTML = sheetCards();
   if (s.type === 'editor') initWheel();
 }
 
@@ -288,6 +292,55 @@ function sheetRounds(ev) {
   return `${sheetHead('Alle Runden')}
     <p class="hint" style="margin-bottom:14px">Tippe auf eine Runde, um sie zu bearbeiten.</p>
     <div class="card">${roundsList(ev)}</div>`;
+}
+
+/* ---------- Kartenübersicht ---------- */
+
+const SUITS = {
+  kreuz: { red: false, svg: '<circle cx="12" cy="7.2" r="4.3"/><circle cx="7" cy="13.6" r="4.3"/><circle cx="17" cy="13.6" r="4.3"/><circle cx="12" cy="12" r="2.5"/><path d="M10.9 12.5c0 4.2-1 6.6-3.2 8.5h8.6c-2.2-1.9-3.2-4.3-3.2-8.5z"/>' },
+  pik: { red: false, svg: '<path d="M12 2C9 6.5 3.5 9.4 3.5 13.6c0 2.6 2 4.5 4.4 4.5 1.4 0 2.6-.6 3.3-1.6-.2 2-1 3.5-2.7 4.5h7c-1.7-1-2.5-2.5-2.7-4.5.7 1 1.9 1.6 3.3 1.6 2.4 0 4.4-1.9 4.4-4.5C20.5 9.4 15 6.5 12 2z"/>' },
+  herz: { red: true, svg: '<path d="M12 21s-7.6-4.7-9.5-9.3C1.2 8.5 3.3 5 6.8 5c2.1 0 3.6 1.2 5.2 3 1.6-1.8 3.1-3 5.2-3 3.5 0 5.6 3.5 4.3 6.7C19.6 16.3 12 21 12 21z"/>' },
+  karo: { red: true, svg: '<path d="M12 2l7.5 10L12 22 4.5 12z"/>' },
+};
+
+// Reihenfolge nach Stichstärke, stärkste Karte zuerst
+const CARD_ROWS = {
+  trumpf: [
+    { label: 'Dulle', cards: [['herz', '10']] },
+    { label: 'Damen', cards: [['kreuz', 'D'], ['pik', 'D'], ['herz', 'D'], ['karo', 'D']] },
+    { label: 'Buben', cards: [['kreuz', 'B'], ['pik', 'B'], ['herz', 'B'], ['karo', 'B']] },
+    { label: 'Karo', cards: [['karo', 'A'], ['karo', '10'], ['karo', 'K']] },
+  ],
+  fehl: [
+    { label: 'Kreuz', cards: [['kreuz', 'A'], ['kreuz', '10'], ['kreuz', 'K']] },
+    { label: 'Pik', cards: [['pik', 'A'], ['pik', '10'], ['pik', 'K']] },
+    { label: 'Herz', cards: [['herz', 'A'], null, ['herz', 'K']] },
+  ],
+};
+
+function cardHtml(c) {
+  if (!c) return '<div class="pcard empty"></div>';
+  const [suit, rank] = c;
+  const s = SUITS[suit];
+  return `<div class="pcard${s.red ? ' red' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true">${s.svg}</svg><span>${rank}</span></div>`;
+}
+
+function cardRows(rows) {
+  return rows.map((r) => `
+    <div class="card-row">
+      <div class="card-row-label">${r.label}</div>
+      <div class="card-row-cards">${r.cards.map(cardHtml).join('')}</div>
+    </div>`).join('');
+}
+
+function sheetCards() {
+  return `${sheetHead('Kartenübersicht')}
+    <p class="hint">Geordnet nach Stichstärke – die stärkste Karte steht oben links.</p>
+    <h3>Trumpf</h3>
+    <div class="card pad">${cardRows(CARD_ROWS.trumpf)}</div>
+    <h3>Fehl</h3>
+    <div class="card pad">${cardRows(CARD_ROWS.fehl)}</div>
+    <p class="hint">D = Dame · B = Bube · A = Ass · K = König.<br>Jede Karte gibt es zweimal. Bei zwei gleichen Karten gewinnt die zuerst gespielte.</p>`;
 }
 
 function sheetEvening(ev) {
@@ -478,6 +531,7 @@ const actions = {
   },
   'new-round'() { startEditor(activeEvening()); },
   'open-rounds'() { openSheet({ type: 'rounds', evId: db.activeId }); },
+  'open-cards'() { openSheet({ type: 'cards' }); },
   'end-evening'() {
     const ev = activeEvening();
     if (!confirm('Abend beenden? Er bleibt im Verlauf gespeichert.')) return;
