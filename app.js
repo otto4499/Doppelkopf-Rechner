@@ -166,7 +166,6 @@ function viewEvening() {
         <button class="btn" data-action="open-cards" aria-label="Kartenübersicht">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.832 8.445a1 1 0 00-1.589-.098l-2.075 3.098a1 1 0 000 1.11l2 3a1 1 0 001.664 0l2-3a1 1 0 000-1.11z"/><path d="m7.18 20.827-5-11a2 2 0 01.993-2.647L7 5.44"/><rect x="7" y="2" width="14" height="20" rx="2"/></svg>
         </button>
-        <button class="btn" data-action="open-rounds">Alle Runden</button>
         <button class="btn" data-action="end-evening" aria-label="Abend beenden">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff3737" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-chevrons-right preview-icon"><path d="M14 15L17 12L14 9"/><path d="M8 15L11 12L8 9"/><circle cx="12" cy="12" r="10"/></svg>
@@ -335,12 +334,10 @@ function cardRows(rows) {
 
 function sheetCards() {
   return `${sheetHead('Kartenübersicht')}
-    <p class="hint">Geordnet nach Stichstärke – die stärkste Karte steht oben links.</p>
     <h3>Trumpf</h3>
     <div class="card pad">${cardRows(CARD_ROWS.trumpf)}</div>
     <h3>Fehl</h3>
-    <div class="card pad">${cardRows(CARD_ROWS.fehl)}</div>
-    <p class="hint">D = Dame · B = Bube · A = Ass · K = König.<br>Jede Karte gibt es zweimal. Bei zwei gleichen Karten gewinnt die zuerst gespielte.</p>`;
+    <div class="card pad">${cardRows(CARD_ROWS.fehl)}</div>`;
 }
 
 function sheetEvening(ev) {
